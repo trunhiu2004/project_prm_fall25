@@ -1,4 +1,4 @@
-package com.example.project_prm;
+package com.example.project_prm.activity;
 
 import android.os.Bundle;
 import android.view.animation.Animation;
@@ -18,6 +18,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.project_prm.R;
+import com.example.project_prm.adapter.LoaiSpAdapter;
+import com.example.project_prm.model.LoaiSp;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -30,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ListView listViewManHinhChinh;
     DrawerLayout drawerLayout;
-
+    LoaiSpAdapter loaiSpAdapter;
+    List<LoaiSp> mangloaisp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private void actionViewFlipper() {
         List<Integer> mangQuangCao = new ArrayList<>();
         mangQuangCao.add(R.drawable.banner);
-        mangQuangCao.add(R.drawable.banner);
-        mangQuangCao.add(R.drawable.banner);
+        mangQuangCao.add(R.drawable.banner3);
+        mangQuangCao.add(R.drawable.banner2);
         for (int i = 0; i < mangQuangCao.size(); i++) {
             ImageView imageView = new ImageView(getApplicationContext());
             Glide.with(getApplicationContext())
@@ -62,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         }
         viewFlipper.setFlipInterval(3000);
         viewFlipper.setAutoStart(true);
-        Animation slide_in = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_in_right);
-        Animation slide_out = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_out_right);
+        Animation slide_in = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_in_left);
+        Animation slide_out = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_out_left);
         viewFlipper.setInAnimation(slide_in);
         viewFlipper.setOutAnimation(slide_out);
 
@@ -85,5 +89,10 @@ public class MainActivity extends AppCompatActivity {
         listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
         navigationView = findViewById(R.id.navigationView);
         drawerLayout = findViewById(R.id.drawerLayout);
+        //khoi tao list
+        mangloaisp = new ArrayList<>();
+        //khoi tao adapter
+        loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
+        listViewManHinhChinh.setAdapter(loaiSpAdapter);
     }
 }
