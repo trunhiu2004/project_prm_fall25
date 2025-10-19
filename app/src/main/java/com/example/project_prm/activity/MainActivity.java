@@ -1,10 +1,14 @@
 package com.example.project_prm.activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import androidx.activity.EdgeToEdge;
@@ -21,10 +25,18 @@ import com.bumptech.glide.Glide;
 import com.example.project_prm.R;
 import com.example.project_prm.adapter.LoaiSpAdapter;
 import com.example.project_prm.model.LoaiSp;
+import com.example.project_prm.retrofit.ApiBanHang;
+import com.example.project_prm.retrofit.RetrofitClient;
+import com.example.project_prm.utils.Utils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -35,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     LoaiSpAdapter loaiSpAdapter;
     List<LoaiSp> mangloaisp;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    ApiBanHang apiBanHang;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,16 +60,39 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        apiBanHang = RetrofitClient.getInstance(Utils.BASE_URL).create(ApiBanHang.class);
+
         anhXa();
         actionBar();
-        actionViewFlipper();
+        if(isConnected(this)){
+            actionViewFlipper();
+            getLoaiSanPham();
+        }else{
+            Toast.makeText(getApplicationContext(),"Không có internet, vui lòng kết nối lại!",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getLoaiSanPham() {
+        compositeDisposable.add(apiBanHang.getLoaiSp()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        loaiSpModel -> {
+                            if(loaiSpModel.isSuccess()){
+                                mangloaisp = loaiSpModel.getResult();
+                                //khoi tao adapter
+                                loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
+                                listViewManHinhChinh.setAdapter(loaiSpAdapter);
+                            }
+                        }
+                ));
     }
 
     private void actionViewFlipper() {
-        List<Integer> mangQuangCao = new ArrayList<>();
-        mangQuangCao.add(R.drawable.banner);
-        mangQuangCao.add(R.drawable.banner3);
-        mangQuangCao.add(R.drawable.banner2);
+        List<String> mangQuangCao = new ArrayList<>();
+        mangQuangCao.add("http://192.168.107.44/uploads/banner.png");
+        mangQuangCao.add("http://192.168.107.44/uploads/banner2.jpg");
+        mangQuangCao.add("http://192.168.107.44/uploads/banner3.jpg");
         for (int i = 0; i < mangQuangCao.size(); i++) {
             ImageView imageView = new ImageView(getApplicationContext());
             Glide.with(getApplicationContext())
@@ -91,8 +129,23 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         //khoi tao list
         mangloaisp = new ArrayList<>();
-        //khoi tao adapter
-        loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
-        listViewManHinhChinh.setAdapter(loaiSpAdapter);
+
+    }
+
+    private boolean isConnected(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if((wifi!=null && wifi.isConnected()) || (mobile!=null && mobile.isConnected())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        compositeDisposable.clear();
+        super.onDestroy();
     }
 }
