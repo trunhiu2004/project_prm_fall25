@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">project_prm</string>
+    <string name="gi_2500">Giá: 2500đ</string>
+    <string name="th_m_v_o_gi_h_ng">Thêm vào giỏ hàng</string>
 </resources>

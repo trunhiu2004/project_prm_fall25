@@ -1,6 +1,7 @@
 package com.example.project_prm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.project_prm.Interface.ItemClickListener;
 import com.example.project_prm.R;
+import com.example.project_prm.activity.ChiTietActivity;
 import com.example.project_prm.model.SanPhamMoi;
 
 import java.text.DecimalFormat;
@@ -48,12 +51,23 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(holder instanceof MyViewHolder){
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             SanPhamMoi sanPham = array.get(position);
-            myViewHolder.tensp.setText(sanPham.getTensp());
+            myViewHolder.tensp.setText(sanPham.getTensp().trim());
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             myViewHolder.giasp.setText("Giá: "+decimalFormat.format(Double.parseDouble(sanPham.getGiasp()))+"Đ");
             myViewHolder.mota.setText(sanPham.getMota());
-            myViewHolder.idsp.setText(sanPham.getId()+"");
             Glide.with(context).load(sanPham.getHinhanh()).into(myViewHolder.hinhanh);
+            myViewHolder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int pos, boolean isLongClick) {
+                    if(!isLongClick){
+                        //click
+                        Intent intent = new Intent(context, ChiTietActivity.class);
+                        intent.putExtra("chitiet",sanPham);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }else{
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
@@ -82,9 +96,10 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tensp,giasp,mota,idsp;
         ImageView hinhanh;
+        private ItemClickListener itemClickListener;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tensp = itemView.findViewById(R.id.itemdt_ten);
@@ -92,6 +107,16 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mota = itemView.findViewById(R.id.itemdt_mota);
             idsp = itemView.findViewById(R.id.itemdt_idsp);
             hinhanh = itemView.findViewById(R.id.itemdt_image);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View view) {
+            itemClickListener.onClick(view, getAdapterPosition(),false);
         }
     }
 }

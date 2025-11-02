@@ -16,6 +16,12 @@
         android:theme="@style/Theme.Project_prm"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.GioHangActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChiTietActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.LaptopActivity"
             android:exported="false" />
         <activity
