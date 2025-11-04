@@ -9,5 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_color">#1F1D2B</color>
     <color name="orange">#FF7427</color>
-
+    <color name="colortext">#FF03DAC5</color>
 </resources>

@@ -54,4 +54,10 @@ dependencies {
     implementation("com.nex3z:notification-badge:1.0.4")
     //even bus
     implementation("org.greenrobot:eventbus:3.2.0")
+
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
+    //paper
+    implementation("io.github.pilgr:paperdb:2.7.1")
 }
