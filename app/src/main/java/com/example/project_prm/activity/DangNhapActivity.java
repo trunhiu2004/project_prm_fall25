@@ -2,6 +2,7 @@ package com.example.project_prm.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -31,7 +32,7 @@ public class DangNhapActivity extends AppCompatActivity {
     AppCompatButton btndangnhap;
     ApiBanHang apiBanHang;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-
+    boolean isLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class DangNhapActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         btndangnhap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,24 +69,8 @@ public class DangNhapActivity extends AppCompatActivity {
                 }else{
                     //save
                     Paper.book().write("email",str_email);
-                    Paper.book().write("pass",pass);
-
-                    compositeDisposable.add(apiBanHang.dangnhap(str_email,str_pass)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    userModel -> {
-                                        if(userModel.isSuccess()){
-                                            Utils.user_current = userModel.getResult().get(0);
-                                            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    },
-                                    throwable -> {
-                                        Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                            ));
+                    Paper.book().write("pass",str_pass);
+                    dangNhap(str_email,str_pass);
 
                 }
             }
@@ -102,10 +88,49 @@ public class DangNhapActivity extends AppCompatActivity {
         btndangnhap = findViewById(R.id.btndangnhap);
 
         //read data
-        if(Paper.book().read("email") != null && Paper.book().read("pass") != null){
-            email.setText(Paper.book().read("email"));
-            pass.setText(Paper.book().read("pass"));
+        try {
+            if (Paper.book().read("email") != null && Paper.book().read("pass") != null) {
+                email.setText(Paper.book().read("email"));
+                pass.setText(Paper.book().read("pass"));
+                if(Paper.book().read("islogin") != null){
+                    boolean flag = Paper.book().read("islogin");
+                    if (flag){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dangNhap(Paper.book().read("email"),Paper.book().read("pass"));
+                            }
+                        },1000);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Nếu có lỗi đọc dữ liệu cũ => xóa đi để tránh crash
+            Paper.book().delete("email");
+            Paper.book().delete("pass");
         }
+    }
+
+    private void dangNhap(String email, String pass) {
+        compositeDisposable.add(apiBanHang.dangnhap(email,pass)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        userModel -> {
+                            if(userModel.isSuccess()){
+                                isLogin = true;
+                                Paper.book().write("islogin",isLogin);
+                                Utils.user_current = userModel.getResult().get(0);
+                                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        },
+                        throwable -> {
+                            Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                ));
+        
     }
 
     @Override

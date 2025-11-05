@@ -6,78 +6,137 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9FAFB"
     tools:context=".activity.MainActivity">
+
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <!-- Nội dung chính -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#F9FAFB">
+
+            <!-- Thanh công cụ -->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarManHinhChinh"
                 app:title="Trang chính"
-                android:background="#ff00dfff"
+                app:titleTextColor="@android:color/white"
+                android:background="@color/teal_700"
+                android:elevation="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
+
                 <FrameLayout
                     android:id="@+id/framegiohang"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="right"
-                    android:layout_width="55dp"
-                    android:layout_height="?attr/actionBarSize">
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="12dp"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_cart_24"
+                        android:tint="@android:color/white"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"/>
+
                     <com.nex3z.notificationbadge.NotificationBadge
                         android:id="@+id/menu_sl"
-                        android:layout_gravity="top|right"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"/>
-                    <ImageView
-                        android:layout_marginTop="15dp"
-                        android:src="@drawable/ic_cart_24"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"/>
-
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"/>
                 </FrameLayout>
             </androidx.appcompat.widget.Toolbar>
+
+            <!-- Phần banner -->
             <ViewFlipper
                 android:id="@+id/viewFlipper"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="200dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/bg_banner_rounded"
+                android:clipToOutline="true"
+                android:elevation="2dp"/>
 
-            </ViewFlipper>
+            <!-- Nội dung sản phẩm -->
             <LinearLayout
-                android:background="#5992d2"
                 android:orientation="vertical"
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:elevation="3dp"
+                android:layout_margin="8dp"
+                android:layout_gravity="center"
+                android:backgroundTintMode="src_in"
+                android:clipToOutline="true">
+
                 <TextView
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@android:color/holo_red_light"
-                    android:textStyle="bold"
                     android:text="Sản phẩm mới nhất"
+                    android:textColor="#212121"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="6dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="3dp"
+                    android:background="@color/teal_700"
+                    android:layout_marginBottom="8dp"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycleView"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                    android:layout_height="match_parent"
+                    android:paddingBottom="10dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="vertical" />
             </LinearLayout>
         </LinearLayout>
+
+        <!-- Navigation Drawer -->
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_gravity="start"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ListView
-                android:layout_marginTop="10dp"
-                android:id="@+id/listViewManHinhChinh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:fitsSystemWindows="true"
+            app:itemTextColor="@color/black"
+            app:itemIconTint="@color/teal_700"
+            app:headerLayout="@null">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="Menu chính"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#333333"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ListView
+                    android:id="@+id/listViewManHinhChinh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="1dp"/>
+            </LinearLayout>
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 

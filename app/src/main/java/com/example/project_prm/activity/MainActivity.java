@@ -147,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void actionViewFlipper() {
         List<String> mangQuangCao = new ArrayList<>();
-        mangQuangCao.add("http://192.168.107.44/uploads/banner.png");
-        mangQuangCao.add("http://192.168.107.44/uploads/banner2.jpg");
-        mangQuangCao.add("http://192.168.107.44/uploads/banner3.jpg");
+        mangQuangCao.add("https://res.cloudinary.com/donwmlm9h/image/upload/v1762323172/gtfki3lpbmhu9cel3tuq.png");
+        mangQuangCao.add("https://res.cloudinary.com/donwmlm9h/image/upload/v1762323244/s6ukobbf48h7zbirvz2b.jpg");
+        mangQuangCao.add("https://res.cloudinary.com/donwmlm9h/image/upload/v1762323258/vfq9bojhuvxsktnxdnyo.jpg");
         for (int i = 0; i < mangQuangCao.size(); i++) {
             ImageView imageView = new ImageView(getApplicationContext());
             Glide.with(getApplicationContext())

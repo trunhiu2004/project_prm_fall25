@@ -1,49 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="8dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    app:cardCornerRadius="4dp"
     android:layout_width="160dp"
-    android:layout_height="wrap_content">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="6dp"
+    app:cardUseCompatPadding="true"
+    android:clipToPadding="false">
 
-        <LinearLayout
-            android:orientation="vertical"
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Ảnh sản phẩm -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="150dp"
+            android:clipToOutline="true">
+
             <ImageView
                 android:id="@+id/itemsp_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_media_24"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"/>
-            <TextView
-                android:id="@+id/itemsp_ten"
-                android:text="Laptop"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/itemsp_gia"
-                android:text="gia: 250000d"
-                android:textSize="20sp"
-                android:textColor="@android:color/holo_red_light"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <ImageView
-            android:src="@drawable/iconnew_h512"
-            android:layout_gravity="top|right"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
-    </FrameLayout>
+                android:background="@drawable/bg_image_placeholder"
+                android:contentDescription="Ảnh sản phẩm" />
+
+            <!-- Icon góc phải -->
+            <ImageView
+                android:src="@drawable/iconnew_h512"
+                android:layout_gravity="top|end"
+                android:layout_margin="6dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
+        </FrameLayout>
+
+        <!-- Tên sản phẩm -->
+        <TextView
+            android:id="@+id/itemsp_ten"
+            android:text="Laptop Acer Aspire 5"
+            android:textColor="#222222"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Giá sản phẩm -->
+        <TextView
+            android:id="@+id/itemsp_gia"
+            android:text="₫25.000.000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#E53935"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Nút hoặc nhãn thêm -->
+        <TextView
+            android:text="Mua ngay"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_button_buy"/>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

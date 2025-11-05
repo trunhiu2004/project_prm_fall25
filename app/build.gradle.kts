@@ -59,5 +59,8 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
     //paper
-    implementation("io.github.pilgr:paperdb:2.7.1")
+    implementation("io.github.pilgr:paperdb:2.7.2")
+
+    //Gson
+    implementation("com.google.code.gson:gson:2.8.9")
 }
