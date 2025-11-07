@@ -16,6 +16,12 @@
         android:theme="@style/Theme.Project_prm"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.XemDonActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ThanhToanActivity"
             android:exported="false" />
         <activity
@@ -44,7 +50,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

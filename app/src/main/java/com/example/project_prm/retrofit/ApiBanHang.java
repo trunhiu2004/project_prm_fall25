@@ -1,6 +1,7 @@
 package com.example.project_prm.retrofit;
 
 
+import com.example.project_prm.model.DonHangModel;
 import com.example.project_prm.model.LoaiSpModel;
 import com.example.project_prm.model.SanPhamMoiModel;
 import com.example.project_prm.model.UserModel;
@@ -53,4 +54,15 @@ public interface ApiBanHang {
             @Field("chitiet") String chitiet
     );
 
+    @POST("xemdonhang.php")
+    @FormUrlEncoded
+    Observable<DonHangModel> xemDonHang(
+            @Field("iduser") int id
+    );
+
+    @POST("timkiem.php")
+    @FormUrlEncoded
+    Observable<SanPhamMoiModel> search(
+            @Field("search") String search
+    );
 }

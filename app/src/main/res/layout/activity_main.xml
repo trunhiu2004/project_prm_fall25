@@ -30,29 +30,41 @@
                 android:elevation="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize">
-
-                <FrameLayout
-                    android:id="@+id/framegiohang"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="12dp"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent">
-
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="?attr/actionBarSize">
                     <ImageView
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_cart_24"
-                        android:tint="@android:color/white"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
+                        android:id="@+id/imgsearch"
+                        android:layout_marginRight="15dp"
+                        android:layout_gravity="right"
+                        android:src="@drawable/baseline_search_24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="?attr/actionBarSize"/>
+                    <FrameLayout
+                        android:id="@+id/framegiohang"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="12dp"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent">
 
-                    <com.nex3z.notificationbadge.NotificationBadge
-                        android:id="@+id/menu_sl"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"/>
-                </FrameLayout>
+                        <ImageView
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_cart_24"
+                            android:tint="@android:color/white"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+
+                        <com.nex3z.notificationbadge.NotificationBadge
+                            android:id="@+id/menu_sl"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"/>
+                    </FrameLayout>
+
+                </LinearLayout>
+
             </androidx.appcompat.widget.Toolbar>
 
             <!-- Phần banner -->
