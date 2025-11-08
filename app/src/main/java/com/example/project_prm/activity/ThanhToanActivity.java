@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.project_prm.R;
+import com.example.project_prm.model.GioHang;
 import com.example.project_prm.retrofit.ApiBanHang;
 import com.example.project_prm.retrofit.RetrofitClient;
 import com.example.project_prm.utils.Utils;
@@ -94,7 +95,21 @@ public class ThanhToanActivity extends AppCompatActivity {
                             .subscribe(
                                     userModel -> {
                                         Toast.makeText(getApplicationContext(), "Thanh cong", Toast.LENGTH_SHORT).show();
+                                        // Xóa những sản phẩm đã mua ra khỏi giỏ hàng
+                                        for (int i = 0; i < Utils.mangmuahang.size(); i++) {
+                                            GioHang spDaMua = Utils.mangmuahang.get(i);
+                                            for (int j = 0; j < Utils.manggiohang.size(); j++) {
+                                                if (Utils.manggiohang.get(j).getIdsp() == spDaMua.getIdsp()) {
+                                                    Utils.manggiohang.remove(j);
+                                                    j--; // tránh lỗi skip phần tử khi remove
+                                                }
+                                            }
+                                        }
+
+                                        // Xóa danh sách hàng đã chọn (đã thanh toán)
                                         Utils.mangmuahang.clear();
+
+                                        Toast.makeText(getApplicationContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                         startActivity(intent);
                                         finish();

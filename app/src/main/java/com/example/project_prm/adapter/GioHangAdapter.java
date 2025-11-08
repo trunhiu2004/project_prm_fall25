@@ -91,8 +91,19 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
                         builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // Xóa khỏi danh sách mua hàng nếu đang được tick
+                                for (int i = 0; i < Utils.mangmuahang.size(); i++) {
+                                    if (Utils.mangmuahang.get(i).getIdsp() == gioHangList.get(pos).getIdsp()) {
+                                        Utils.mangmuahang.remove(i);
+                                        break;
+                                    }
+                                }
+
+                                // Xóa khỏi giỏ hàng chính
                                 Utils.manggiohang.remove(pos);
                                 notifyDataSetChanged();
+
+                                // Gửi event tính tổng lại
                                 EventBus.getDefault().postSticky(new TinhTongEvent());
                             }
                         });

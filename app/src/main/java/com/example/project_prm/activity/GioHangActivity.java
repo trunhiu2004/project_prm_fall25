@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,10 +85,16 @@ public class GioHangActivity extends AppCompatActivity {
         btnmuahang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ThanhToanActivity.class);
-                intent.putExtra("tongtien",tongtiensp);
-                Utils.manggiohang.clear();
+                if (Utils.mangmuahang.size() == 0) {
+                    Toast.makeText(getApplicationContext(), "Vui lòng chọn sản phẩm để mua", Toast.LENGTH_SHORT).show();
+                    return; // không cho phép chuyển sang màn hình thanh toán
+                }
 
+                Intent intent = new Intent(getApplicationContext(), ThanhToanActivity.class);
+                intent.putExtra("tongtien", tongtiensp);
+
+                // Chỉ xóa những sản phẩm được chọn sau khi thanh toán thành công
+                // nên KHÔNG clear ở đây
                 startActivity(intent);
             }
         });

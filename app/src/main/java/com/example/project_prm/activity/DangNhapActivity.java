@@ -63,14 +63,34 @@ public class DangNhapActivity extends AppCompatActivity {
                 String str_email = email.getText().toString().trim();
                 String str_pass = pass.getText().toString().trim();
                 if(TextUtils.isEmpty(str_email)){
-                    Toast.makeText(getApplicationContext(),"Bạn chưa nhập Email",Toast.LENGTH_SHORT).show();
-                }else if(TextUtils.isEmpty(str_pass)){
-                    Toast.makeText(getApplicationContext(),"Bạn chưa nhập Pass",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Bạn chưa nhập Email", Toast.LENGTH_SHORT).show();
+                } else if(TextUtils.isEmpty(str_pass)) {
+                    Toast.makeText(getApplicationContext(), "Bạn chưa nhập Pass", Toast.LENGTH_SHORT).show();
                 }else{
                     //save
-                    Paper.book().write("email",str_email);
-                    Paper.book().write("pass",str_pass);
-                    dangNhap(str_email,str_pass);
+                    compositeDisposable.add(apiBanHang.dangnhap(str_email,str_pass)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    userModel ->{
+                                        if(userModel.isSuccess()){
+                                            isLogin = true;
+                                            Paper.book().write("isLogin", isLogin);
+                                            Utils.user_current = userModel.getResult().get(0);
+                                            //Luu lai thong tin nguoi dung
+                                            Paper.book().write("user", userModel.getResult().get(0));
+                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                            startActivity(intent);
+                                            Toast.makeText(getApplicationContext(),"Dang nhap thanh cong", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else{
+                                            Toast.makeText(getApplicationContext(),"Tai khoan hoac mat khau bi sai", Toast.LENGTH_SHORT).show();
+                                        }
+                                    },
+                                    throwable ->{
+                                        Toast.makeText(getApplicationContext(),throwable.getMessage(),Toast.LENGTH_SHORT).show();
+                                    }
+                            ));
 
                 }
             }
@@ -98,7 +118,7 @@ public class DangNhapActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                dangNhap(Paper.book().read("email"),Paper.book().read("pass"));
+//                                dangNhap(Paper.book().read("email"),Paper.book().read("pass"));
                             }
                         },1000);
                     }
