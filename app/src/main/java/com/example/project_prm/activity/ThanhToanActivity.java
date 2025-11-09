@@ -1,5 +1,6 @@
 package com.example.project_prm.activity;
 
+import com.bumptech.glide.Glide;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -40,11 +41,14 @@ public class ThanhToanActivity extends AppCompatActivity {
     ApiBanHang apiBanHang;
     long tongtien;
     int totalItem;
+    TextView txtQrHint;
+    android.widget.ImageView imgQr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_thanh_toan);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -89,31 +93,36 @@ public class ThanhToanActivity extends AppCompatActivity {
                     String str_sdt = Utils.user_current.getMobile();
                     int id = Utils.user_current.getId();
                     Log.d("test",new Gson().toJson(Utils.mangmuahang));
-                    compositeDisposable.add(apiBanHang.createOrder(str_email,str_sdt,String.valueOf(tongtien),id,str_diachi,totalItem,new Gson().toJson(Utils.mangmuahang))
+                    compositeDisposable.add(apiBanHang.createOrderV2(str_email,str_sdt,String.valueOf(tongtien),id,str_diachi,totalItem,new Gson().toJson(Utils.mangmuahang))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    userModel -> {
-                                        Toast.makeText(getApplicationContext(), "Thanh cong", Toast.LENGTH_SHORT).show();
-                                        // Xóa những sản phẩm đã mua ra khỏi giỏ hàng
-                                        for (int i = 0; i < Utils.mangmuahang.size(); i++) {
-                                            GioHang spDaMua = Utils.mangmuahang.get(i);
-                                            for (int j = 0; j < Utils.manggiohang.size(); j++) {
-                                                if (Utils.manggiohang.get(j).getIdsp() == spDaMua.getIdsp()) {
-                                                    Utils.manggiohang.remove(j);
-                                                    j--; // tránh lỗi skip phần tử khi remove
-                                                }
-                                            }
+                                    orderResp -> {
+                                        if(orderResp != null && orderResp.isSuccess()){
+                                            int iddonhang = orderResp.getIddonhang();
+                                            compositeDisposable.add(apiBanHang.createPaymentForOrder(iddonhang)
+                                                    .subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(
+                                                            payResp -> {
+                                                                if(payResp != null && payResp.isSuccess()){
+                                                                    String qrUrl = payResp.getQr_url();
+                                                                    if(txtQrHint.getVisibility() != View.VISIBLE){
+                                                                        txtQrHint.setVisibility(View.VISIBLE);
+                                                                    }
+                                                                    imgQr.setVisibility(View.VISIBLE);
+                                                                    Glide.with(getApplicationContext()).load(qrUrl).into(imgQr);
+                                                                    Toast.makeText(getApplicationContext(), "Đã tạo đơn hàng. Vui lòng quét QR để thanh toán", Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    Toast.makeText(getApplicationContext(), "Không tạo được QR thanh toán", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            },
+                                                            throwable2 -> Toast.makeText(getApplicationContext(), throwable2.getMessage(), Toast.LENGTH_SHORT).show()
+                                                    ));
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Tạo đơn hàng thất bại", Toast.LENGTH_SHORT).show();
                                         }
-
-                                        // Xóa danh sách hàng đã chọn (đã thanh toán)
-                                        Utils.mangmuahang.clear();
-
-                                        Toast.makeText(getApplicationContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                        },
+                                    },
                                     throwable -> {
                                         Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
@@ -133,6 +142,8 @@ public class ThanhToanActivity extends AppCompatActivity {
         txtemail = findViewById(R.id.txtemail);
         edtdiachi = findViewById(R.id.edtdiachi);
         btndathang = findViewById(R.id.btndathang);
+        txtQrHint = findViewById(R.id.txtQrHint);
+        imgQr = findViewById(R.id.imgQr);
     }
 
     @Override
