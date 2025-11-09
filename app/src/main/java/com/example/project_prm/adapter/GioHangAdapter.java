@@ -55,17 +55,38 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
         holder.item_giohang_gia.setText("Giá: "+decimalFormat.format(gioHang.getGiasp()));
         long gia = gioHang.getSoluong() * gioHang.getGiasp();
         holder.item_giohang_giasp2.setText(decimalFormat.format(gia));
+        // Reflect selection state based on Utils.mangmuahang to avoid mismatch when returning to screen
+        boolean isSelected = false;
+        for (int i = 0; i < Utils.mangmuahang.size(); i++) {
+            if (Utils.mangmuahang.get(i).getIdsp() == gioHang.getIdsp()) {
+                isSelected = true;
+                break;
+            }
+        }
+        holder.checkBox.setOnCheckedChangeListener(null);
+        holder.checkBox.setChecked(isSelected);
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    Utils.mangmuahang.add(gioHang);
+                    // avoid duplicate add
+                    boolean exists = false;
+                    for (int i = 0; i < Utils.mangmuahang.size(); i++) {
+                        if (Utils.mangmuahang.get(i).getIdsp() == gioHang.getIdsp()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        Utils.mangmuahang.add(gioHang);
+                    }
                     EventBus.getDefault().postSticky(new TinhTongEvent());
                 }else{
                     for (int i = 0; i < Utils.mangmuahang.size(); i++) {
                         if(Utils.mangmuahang.get(i).getIdsp() == gioHang.getIdsp()){
                             Utils.mangmuahang.remove(i);
                             EventBus.getDefault().postSticky(new TinhTongEvent());
+                            break;
                         }
                     }
                 }
